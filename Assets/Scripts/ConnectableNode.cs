@@ -62,7 +62,7 @@ namespace Assets.Scripts
         public void OnChildTriggerExit(ConnectableNode other, Transform child)
         {
             
-            if(other.dragInvolved)
+            if(other.dragInvolved && this == previewOwner)
             {
                 RemovePreview();
                 if (connectedNodes.FirstOrDefault() == other)
@@ -212,6 +212,10 @@ namespace Assets.Scripts
                         if (isBetween)
                         {
                             before.connectedNodes[0].before = this;
+                            foreach (ConnectableNode a in connectedNodes)
+                            {
+                                a.connectedNodes.AddRange(before.connectedNodes);
+                            }
                             connectedNodes.AddRange(before.connectedNodes);
                             before.UpdateConnections(newConnections, before.connectedNodes[0]);
                         }
