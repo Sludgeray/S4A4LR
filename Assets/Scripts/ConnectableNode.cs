@@ -7,9 +7,9 @@ namespace Assets.Scripts
 {
     public abstract class ConnectableNode : MonoBehaviour
     {
-        static GameObject preview;
+        static protected GameObject preview;
         static ConnectableNode previewOwner;
-        static bool isAfter;
+        static protected bool isAfter;
         static bool isBetween;
        
 
@@ -34,7 +34,7 @@ namespace Assets.Scripts
                         isAfter = true;
                         ShowPreview(other.transform);
                         previewOwner = this;
-                        isBetween = MoveConnected(connectedNodes, transform, 1);
+                        isBetween = MoveConnected(connectedNodes, 1);
                     }
                 }
             }
@@ -56,6 +56,7 @@ namespace Assets.Scripts
                 isAfter = child.name == "LowerTrigger";
                 ShowPreview(other.transform);
                 previewOwner = this;
+                isBetween = MoveConnected(connectedNodes, 1);
             }
         }
 
@@ -107,7 +108,7 @@ namespace Assets.Scripts
             }
         }
 
-        private void ShowPreview(Transform other)
+        protected virtual void ShowPreview(Transform other)
         {
             RemovePreview();
 
@@ -117,39 +118,31 @@ namespace Assets.Scripts
             preview.GetComponent<MeshRenderer>().enabled = true;
         }
 
-        private void RemovePreview()
+        protected void RemovePreview()
         {
             if (preview)
             {
-                MoveConnected(connectedNodes, transform);
+                MoveConnected(connectedNodes);
                 Destroy(preview);
                 preview = null;
                 previewOwner = null;
             }
         }
 
-        bool MoveConnected(List<ConnectableNode> nodes, Transform parent, int offset = 0)
+        protected virtual bool MoveConnected(List<ConnectableNode> nodes, int offset = 0)
         {
             if (nodes.Count != 0)
             {
-                int i = 0 - offset;
+                float nextOffset = -1 - offset;
                 foreach (ConnectableNode a in nodes)
                 {
-                    a.transform.position = parent.TransformPoint(0, --i, 0);
+                    a.transform.position = transform.TransformPoint(0, nextOffset, 0);
+                    nextOffset -= (a.GetType() == typeof(Repeat)) ? (a as Repeat).blockHeight : 1;
                 }
                 return true;
             }
     
             return false;
-        }
-
-        void MoveConnected(Transform parent, int offset = 1)
-        {
-            if(before)
-            {
-                before.transform.position = parent.TransformPoint(0, ++offset, 0);
-                before.MoveConnected(parent, offset);
-            }
         }
 
         #region MouseDrag
@@ -164,7 +157,7 @@ namespace Assets.Scripts
 
             dragTarget = dragInvolved = true;
             transform.Find("LowerTrigger").GetComponent<Collider>().enabled = false;
-            Transform upperTrigger = transform.Find("UpperTrigger");
+            Collider upperTrigger = transform.Find("UpperTrigger").GetComponent<Collider>();
             if (upperTrigger)
             {
                 upperTrigger.GetComponent<Collider>().enabled = false;
@@ -182,7 +175,7 @@ namespace Assets.Scripts
             Vector3 CursorPosition = Camera.main.ScreenToWorldPoint(CursorPoint) + Offset;
             transform.position = CursorPosition;
 
-            MoveConnected(connectedNodes, transform);
+            MoveConnected(connectedNodes);
         }
 
         public void OnMouseUp()
@@ -191,22 +184,13 @@ namespace Assets.Scripts
 
             if(preview)
             {
-                if(!isAfter)
-                {
-                    ConnectableNode first = connectedNodes.Any() ? connectedNodes.LastOrDefault() : this;
-                    List<ConnectableNode> newConnections = new List<ConnectableNode> { previewOwner };
-                    newConnections.AddRange(previewOwner.connectedNodes);
-                    first.UpdateConnections(newConnections);
-                    previewOwner.before = this;
-                    previewOwner.transform.Find("UpperTrigger").GetComponent<Collider>().enabled = false; 
-                }
-                else
+                if (isAfter)
                 {
                     transform.position = preview.transform.position;
                     transform.rotation = preview.transform.rotation;
                     before = previewOwner;
                     if (before.connectedNodes.FirstOrDefault() != this)
-                    {   
+                    {
                         List<ConnectableNode> newConnections = new List<ConnectableNode> { this };
                         newConnections.AddRange(connectedNodes);
                         if (isBetween)
@@ -225,11 +209,20 @@ namespace Assets.Scripts
                         }
                     }
                 }
+                else
+                {
+                    ConnectableNode first = connectedNodes.Any() ? connectedNodes.LastOrDefault() : this;
+                    List<ConnectableNode> newConnections = new List<ConnectableNode> { previewOwner };
+                    newConnections.AddRange(previewOwner.connectedNodes);
+                    first.UpdateConnections(newConnections);
+                    previewOwner.before = this;
+                    previewOwner.transform.Find("UpperTrigger").GetComponent<Collider>().enabled = false;
+                }
                 RemovePreview();
             }
 
             transform.Find("LowerTrigger").GetComponent<Collider>().enabled = true;
-            Transform upperTrigger = transform.Find("UpperTrigger");
+            Collider upperTrigger = transform.Find("UpperTrigger").GetComponent<Collider>();
             if (upperTrigger && !before)
             {
                 upperTrigger.GetComponent<Collider>().enabled = true;

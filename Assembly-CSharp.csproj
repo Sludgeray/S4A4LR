@@ -61,12 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Scripts\CN_Backup.cs" />
     <Compile Include="Assets\Scripts\ConnectableNode.cs" />
-    <Compile Include="Assets\Scripts\ConnectionManager.cs" />
     <Compile Include="Assets\Scripts\Delay.cs" />
     <Compile Include="Assets\Scripts\LoopConnect.cs" />
     <Compile Include="Assets\Scripts\NodeConnect.cs" />
+    <Compile Include="Assets\Scripts\Repeat.cs" />
     <Compile Include="Assets\Scripts\Start.cs" />
     <Compile Include="Assets\Scripts\ToggleDigital.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">

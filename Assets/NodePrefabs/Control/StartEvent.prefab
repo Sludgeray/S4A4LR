@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686f1121be70c4945a7ba191eb5436f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  before: {fileID: 0}
   connectedNodes: []
+  before: {fileID: 0}
+  dragTarget: 0
+  dragInvolved: 0
 --- !u!1001 &2988460536132701348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -81,15 +83,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6299078644125807480, guid: 9c1702d9d0bbb794fabde2c58150af4a,
-        type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 8692957120986702143, guid: 9c1702d9d0bbb794fabde2c58150af4a,
         type: 3}
       propertyPath: m_TagString
       value: LowerConnector
+      objectReference: {fileID: 0}
+    - target: {fileID: 6299078644125807480, guid: 9c1702d9d0bbb794fabde2c58150af4a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1522499113821178936, guid: 9c1702d9d0bbb794fabde2c58150af4a,
         type: 3}
@@ -101,7 +103,14 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: -0.9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4899159599056478338, guid: 9c1702d9d0bbb794fabde2c58150af4a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4899159599056478338, guid: 9c1702d9d0bbb794fabde2c58150af4a, type: 3}
+    - {fileID: 8053103761292859125, guid: 9c1702d9d0bbb794fabde2c58150af4a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9c1702d9d0bbb794fabde2c58150af4a, type: 3}
 --- !u!1 &1907195333269780867 stripped
 GameObject:

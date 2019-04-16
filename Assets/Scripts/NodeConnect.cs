@@ -8,7 +8,7 @@ namespace Assets.Scripts
     {
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag != "Connector")
+            if (other.tag == "Event" || other.tag == "Node")
             {
                 gameObject.GetComponentInParent<ConnectableNode>().OnChildTriggerEnter(other.GetComponent<ConnectableNode>(), transform);
             }
@@ -16,7 +16,7 @@ namespace Assets.Scripts
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.tag != "Connector")
+            if (other.tag == "Event" || other.tag == "Node")
             {
                 gameObject.GetComponentInParent<ConnectableNode>().OnChildTriggerStay(other.GetComponent<ConnectableNode>(), transform);
             }
@@ -24,7 +24,7 @@ namespace Assets.Scripts
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.tag != "Connector")
+            if (other.tag == "Event" || other.tag == "Node")
             {
                 gameObject.GetComponentInParent<ConnectableNode>().OnChildTriggerExit(other.GetComponent<ConnectableNode>(), transform);
             }
